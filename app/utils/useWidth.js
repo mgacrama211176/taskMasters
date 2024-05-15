@@ -1,33 +1,14 @@
 import { useState, useEffect } from "react";
 
+//create a custom hook for getting the width of the window
 export const useWidth = () => {
-  const [width, setWidth] = useState(() => {
-    // Check if window is defined (for server-side rendering)
-    if (typeof window !== "undefined") {
-      return window.innerWidth;
-    } else {
-      return 0; // Default width if window is not available
-    }
-  });
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    const handleResize = () => {
-      // Check if window is defined (for server-side rendering)
-      if (typeof window !== "undefined") {
-        setWidth(window.innerWidth);
-      }
-    };
-
-    // Check if window is defined before adding event listener
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", handleResize);
-    }
-
+    setWidth(window.innerWidth);
+    window.addEventListener("resize", () => setWidth(window.innerWidth));
     return () => {
-      // Check if window is defined before removing event listener
-      if (typeof window !== "undefined") {
-        window.removeEventListener("resize", handleResize);
-      }
+      window.removeEventListener("resize", () => setWidth(window.innerWidth));
     };
   }, []);
 
